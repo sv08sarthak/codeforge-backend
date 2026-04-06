@@ -4,6 +4,10 @@ const app = express();
 
 app.use(express.json());
 
+const userRoutes = require("./src/routes/userRoutes");
+
+app.use("/api", userRoutes);
+
 app.get("/", (req, res) => {
   res.send("CodeForge Backend Running");
 });
