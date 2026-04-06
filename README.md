@@ -16,5 +16,10 @@ This project is a backend system for a coding platform where users can solve pro
 - Submission system
 - User dashboard
 
+## API Endpoints
+
+GET /api/users  
+Returns list of users
+
 ## Status
 🚧 Currently under development
