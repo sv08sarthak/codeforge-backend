@@ -47,11 +47,50 @@ const getUserById = (req, res) => {
   });
 };
 
+
+
+//day 5
+const userService = require("../services/user.service");
+
+const createUser = async (req, res) => {
+  try {
+    const { name, email } = req.body;
+
+    // validation
+    if (!name || !email) {
+      return res.status(400).json({
+        success: false,
+        message: "Name and email are required"
+      });
+    }
+
+    // call service
+    const user = await userService.createUser({ name, email });
+
+    return res.status(201).json({
+      success: true,
+      data: user
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+//------------------
+
 // export everything
 module.exports = {
   dbTest,
   getHello,
   getProfile,
   getStatus,
-  getUserById
+  getUserById,
+
+  createUser // ---day 5
 };

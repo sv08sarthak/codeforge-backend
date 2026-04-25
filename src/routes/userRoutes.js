@@ -7,7 +7,16 @@ const userController = require("../controllers/user.controller");
 
 const { dbTest } = require("../controllers/user.controller");
 
+
+// FIRST — specific routes
+router.post("/create", userController.createUser);
+
+
+
+
 // test route
+
+
 router.get("/", (req, res) => {
   res.send("User route working");
 });
