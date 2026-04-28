@@ -1,5 +1,8 @@
 const pool = require("../config/db");
 
+
+
+
 // define as variable
 const dbTest = async (req, res) => {
   try {
@@ -9,14 +12,20 @@ const dbTest = async (req, res) => {
       success: true,
       data: result.rows,
     });
-  } catch (error) {
-    console.error(error);
+  } 
 
-    res.status(500).json({
-      success: false,
-      message: "Database error",
-    });
-  }
+
+  catch (error) {
+  console.error(error);
+
+  return res.status(error.statusCode || 500).json({
+    success: false,
+    message: error.message || "Internal server error"
+  });
+}
+
+
+
 };
 
 const getHello = (req, res) => {
@@ -65,11 +74,33 @@ const createUser = async (req, res) => {
     }
 
     // call service
-    const user = await userService.createUser({ name, email });
+const user = await userService.createUser({ name, email });
 
     return res.status(201).json({
       success: true,
       data: user
+    });
+
+  } 
+
+  catch (error) {
+  console.error(error);
+
+  return res.status(error.statusCode || 500).json({
+    success: false,
+    message: error.message || "Internal server error"
+  });
+}
+};
+
+
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await userService.getAllUsers();
+
+    return res.status(200).json({
+      success: true,
+      data: users
     });
 
   } catch (error) {
@@ -92,5 +123,6 @@ module.exports = {
   getStatus,
   getUserById,
 
-  createUser // ---day 5
+  createUser,
+  getAllUsers // ---day 5
 };
