@@ -5,11 +5,13 @@ const router = express.Router();
 
 const userController = require("../controllers/user.controller");
 
+const validateUser = require("../middlewares/validateUser");
+
 const { dbTest } = require("../controllers/user.controller");
 
 
-// FIRST — specific routes
-router.post("/create", userController.createUser);
+// FIRST — specific routes -- this is route
+router.post("/create", validateUser, userController.createUser);
 
 
 

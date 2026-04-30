@@ -4,7 +4,7 @@ const pool = require("../config/db");
 
 
 // define as variable
-const dbTest = async (req, res) => {
+const dbTest = async (req, res, next) => {
   try {
     const result = await pool.query("SELECT * FROM users");
 
@@ -12,21 +12,13 @@ const dbTest = async (req, res) => {
       success: true,
       data: result.rows,
     });
-  } 
 
-
-  catch (error) {
-  console.error(error);
-
-  return res.status(error.statusCode || 500).json({
-    success: false,
-    message: error.message || "Internal server error"
-  });
-}
-
-
-
+  } catch (error) {
+    next(error);   // 👈 SAME PATTERN
+  }
 };
+
+
 
 const getHello = (req, res) => {
   res.json({
@@ -61,40 +53,30 @@ const getUserById = (req, res) => {
 //day 5
 const userService = require("../services/user.service");
 
-const createUser = async (req, res) => {
+
+//day 7 modified for errors 
+const createUser = async (req, res, next) => {
   try {
     const { name, email } = req.body;
 
-    // validation
-    if (!name || !email) {
-      return res.status(400).json({
-        success: false,
-        message: "Name and email are required"
-      });
-    }
-
-    // call service
-const user = await userService.createUser({ name, email });
+    const user = await userService.createUser({ name, email });
 
     return res.status(201).json({
       success: true,
       data: user
     });
 
-  } 
-
-  catch (error) {
-  console.error(error);
-
-  return res.status(error.statusCode || 500).json({
-    success: false,
-    message: error.message || "Internal server error"
-  });
-}
+  } catch (error) {
+    next(error);   //  KEY CHANGE
+  }
 };
 
 
-const getAllUsers = async (req, res) => {
+
+
+
+
+const getAllUsers = async (req, res, next) => {
   try {
     const users = await userService.getAllUsers();
 
@@ -104,12 +86,7 @@ const getAllUsers = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error"
-    });
+   next(error); //very important change
   }
 };
 

@@ -28,13 +28,17 @@ async function createUser(userData) {
 
         // duplicate email error
         if (error.code === '23505') {
-            throw new Error("Email already exists");
-        }
-
-        // unknown error
-        throw error;
+            const err = new Error("Email already exists");
+            err.status = 400;
+        throw err;
     }
+
+    //other errors
+    throw error;
 }
+}
+
+
 
 module.exports = {
     createUser,
