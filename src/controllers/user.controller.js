@@ -1,11 +1,13 @@
+const asyncHandler = require('../utils/asyncHandler');
+
 const pool = require("../config/db");
 
 
 
 
 // define as variable
-const dbTest = async (req, res, next) => {
-  try {
+const dbTest = asyncHandler(async (req, res) => {
+ 
     const result = await pool.query("SELECT * FROM users");
 
     res.json({
@@ -13,10 +15,8 @@ const dbTest = async (req, res, next) => {
       data: result.rows,
     });
 
-  } catch (error) {
-    next(error);   // 👈 SAME PATTERN
-  }
-};
+  
+});
 
 
 
@@ -54,30 +54,26 @@ const getUserById = (req, res) => {
 const userService = require("../services/user.service");
 
 
-//day 7 modified for errors 
-const createUser = async (req, res, next) => {
-  try {
-    const { name, email } = req.body;
+//day 7/day 8 modified for errors 
+const createUser = asyncHandler(async (req, res) => {
+ 
+  const { name, email } = req.body;
 
-    const user = await userService.createUser({ name, email });
+  const user = await userService.createUser({name, email});
 
-    return res.status(201).json({
-      success: true,
-      data: user
-    });
-
-  } catch (error) {
-    next(error);   //  KEY CHANGE
-  }
-};
+  return res.status(201).json({
+    success: true,
+    data: user
+  });
+});
 
 
 
 
 
 
-const getAllUsers = async (req, res, next) => {
-  try {
+const getAllUsers = asyncHandler(async (req, res) => {
+  
     const users = await userService.getAllUsers();
 
     return res.status(200).json({
@@ -85,10 +81,8 @@ const getAllUsers = async (req, res, next) => {
       data: users
     });
 
-  } catch (error) {
-   next(error); //very important change
-  }
-};
+  
+});
 
 //------------------
 
