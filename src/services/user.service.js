@@ -1,44 +1,38 @@
-const pool = require("../config/db");
+
+
+const CustomError = require("../utils/customError");
+
+const userModel = require("../models/user.model");
+
 
 async function getAllUsers() {
-  try {
-    const result = await pool.query("SELECT * FROM users");
-    return result.rows;
-  } catch (error) {
-    throw error;
-  }
+
+    const users = await userModel.getAllUsersModel();
+
+    return users;
 }
 
 async function createUser(userData) {
+
     const { name, email } = userData;
 
-    const query = `
-        INSERT INTO users (name, email)
-        VALUES ($1, $2)
-        RETURNING *;
-    `;
-
-    const values = [name, email];
-
     try {
-        const result = await pool.query(query, values);
-        return result.rows[0];
+
+        const user = await userModel.createUserModel(name, email);
+
+        return user;
 
     } catch (error) {
 
         // duplicate email error
-        if (error.code === '23505') {
-            const err = new Error("Email already exists");
-            err.status = 400;
-        throw err;
+        if (error.code === "23505") {
+            throw new CustomError("Email already exists", 400);
+        }
+
+        // other errors
+        throw error;
     }
-
-    //other errors
-    throw error;
 }
-}
-
-
 
 module.exports = {
     createUser,
